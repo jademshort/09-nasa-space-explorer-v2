@@ -64,22 +64,36 @@ function displayGallery(apodArray) {
     const galleryItem = document.createElement('div');
     galleryItem.className = 'gallery-item';
     
-    // Determine what image to show (regular image or video thumbnail)
+    // Handle different media types (images vs videos)
     let imageUrl;
-    if (item.media_type === 'video' && item.thumbnail_url) {
-      imageUrl = item.thumbnail_url;
+    let mediaTypeIndicator = '';
+    
+    if (item.media_type === 'video') {
+      // Check if there's a thumbnail for the video
+      if (item.thumbnail_url) {
+        imageUrl = item.thumbnail_url;
+      } else {
+        // If no thumbnail, create a placeholder for video
+        imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNsaWNrIHRvIFdhdGNoIFZpZGVvPC90ZXh0Pjwvc3ZnPg==';
+      }
+      // Add a play button indicator for videos
+      mediaTypeIndicator = '<div class="video-indicator">▶ Video</div>';
     } else if (item.media_type === 'image') {
       imageUrl = item.url;
     } else {
-      // Skip items without displayable images
+      // Skip items that are neither images nor videos
       return;
     }
     
     // Create the HTML content for each gallery item
     galleryItem.innerHTML = `
-      <img src="${imageUrl}" alt="${item.title}" style="cursor: pointer;">
+      <div class="gallery-image-container">
+        <img src="${imageUrl}" alt="${item.title}" style="cursor: pointer;">
+        ${mediaTypeIndicator}
+      </div>
       <p><strong>${item.title}</strong></p>
       <p>Date: ${item.date}</p>
+      <p class="media-type">Type: ${item.media_type === 'video' ? '🎥 Video' : '🖼️ Image'}</p>
     `;
     
     // Add click event to open modal when image is clicked
@@ -95,12 +109,35 @@ function openModal(apodItem) {
   // Create modal container
   const modal = document.createElement('div');
   modal.className = 'modal';
-  
-  // Determine what content to show in modal
+
+  // Handle different media types in the modal
   let mediaContent;
   if (apodItem.media_type === 'video') {
-    // For videos, embed the YouTube video
-    mediaContent = `<iframe src="${apodItem.url}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
+    // Check if it's a YouTube video and embed it
+    if (apodItem.url && apodItem.url.includes('youtube.com')) {
+      // Convert YouTube URL to embed format
+      const videoId = apodItem.url.match(/v=([^&]+)/);
+      if (videoId) {
+        const embedUrl = `https://www.youtube.com/embed/${videoId[1]}`;
+        mediaContent = `<iframe src="${embedUrl}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>`;
+      } else {
+        // If we can't parse the YouTube URL, show a link
+        mediaContent = `
+          <div class="video-link">
+            <p>🎥 <strong>Watch this space video:</strong></p>
+            <a href="${apodItem.url}" target="_blank" class="video-button">Open Video in New Tab</a>
+          </div>
+        `;
+      }
+    } else {
+      // For other video types, provide a link
+      mediaContent = `
+        <div class="video-link">
+          <p>🎥 <strong>Watch this space video:</strong></p>
+          <a href="${apodItem.url}" target="_blank" class="video-button">Open Video in New Tab</a>
+        </div>
+      `;
+    }
   } else {
     // For images, show the high-resolution version if available
     const imageUrl = apodItem.hdurl || apodItem.url;
@@ -113,6 +150,7 @@ function openModal(apodItem) {
       <span class="close">&times;</span>
       <h2>${apodItem.title}</h2>
       <p><strong>Date:</strong> ${apodItem.date}</p>
+      <p><strong>Type:</strong> ${apodItem.media_type === 'video' ? '🎥 Video' : '🖼️ Image'}</p>
       ${mediaContent}
       <p><strong>Description:</strong> ${apodItem.explanation}</p>
       ${apodItem.copyright ? `<p><strong>Copyright:</strong> ${apodItem.copyright}</p>` : ''}

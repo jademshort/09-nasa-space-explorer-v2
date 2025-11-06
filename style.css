@@ -76,6 +76,39 @@ button:hover {
   background-color: #0b3d91;
 }
 
+/* "Did You Know?" fact section - Updated for modern, subtle design */
+.fact-section {
+  background-color: #ffffff;  /* White background like gallery cards */
+  color: #333;  /* Dark text for better readability */
+  padding: 16px 20px;  /* Smaller padding to make it less prominent */
+  margin: 16px 0;  /* Smaller margins */
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);  /* Subtle shadow like gallery cards */
+  border: 1px solid #e5e7eb;  /* Light border to define the section */
+  max-width: 900px;  /* Limit width so it doesn't dominate */
+  margin-left: auto;  /* Center the section */
+  margin-right: auto;
+}
+
+.fact-section h2 {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 20px;  /* Smaller heading */
+  font-weight: 500;  /* Less bold */
+  margin-bottom: 12px;  /* Less space */
+  color: #374151;  /* Softer dark color */
+}
+
+.fact-section p {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 16px;  /* Smaller text */
+  line-height: 1.5;
+  max-width: 700px;  /* Narrower text for better reading */
+  margin: 0 auto;
+  color: #4b5563;  /* Slightly lighter text color */
+  font-style: italic;  /* Makes it feel more like a fun fact */
+}
+
 /* Stack horizontally on wider screens */
 @media (min-width: 600px) {
   .filters {

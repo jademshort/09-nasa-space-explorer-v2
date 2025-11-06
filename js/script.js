@@ -4,6 +4,31 @@ const apodData = 'https://cdn.jsdelivr.net/gh/GCA-Classroom/apod/data.json';
 // Get references to HTML elements we'll need
 const getImageBtn = document.getElementById('getImageBtn');
 const gallery = document.getElementById('gallery');
+const spaceFactElement = document.getElementById('spaceFact');
+
+// Array of fun space facts
+const spaceFacts = [
+  "Giant, spinning storms on Neptune are big enough to swallow the whole Earth!",
+  "The average temperature on Venus is more than 480 degrees Celsius (about 900 degrees Fahrenheit) — hotter than a self-cleaning oven.",
+  "If you could stand at the Martian equator, the temperature at your feet would be like a warm spring day, but at your head it would be freezing cold!",
+  "Saturn is the only planet in our solar system that is less dense than water. It could float in a bathtub if anybody could build a bathtub big enough.",
+  "More than 1,300 Earths would fit into Jupiter's vast sphere."
+];
+
+// Function to display a random space fact
+function displayRandomFact() {
+  // Pick a random number between 0 and the length of our facts array
+  const randomIndex = Math.floor(Math.random() * spaceFacts.length);
+  
+  // Get the fact at that random position
+  const randomFact = spaceFacts[randomIndex];
+  
+  // Display the random fact on the page
+  spaceFactElement.textContent = randomFact;
+}
+
+// Display a random fact when the page loads
+displayRandomFact();
 
 // Add event listener to the button
 getImageBtn.addEventListener('click', fetchAndDisplayImages);
